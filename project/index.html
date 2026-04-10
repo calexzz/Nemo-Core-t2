@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Индивидуальный график сотрудников | Smart Schedule</title>
+    <link rel="stylesheet" href="./styles/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="main-table">
+            <h1 style="font-size: 1.8rem; margin-bottom: 20px; font-weight: 700; background: linear-gradient(135deg, #1e3a5f, #2b5b8b); -webkit-background-clip: text; background-clip: text; color: transparent;">
+                <i class="fas fa-calendar-alt" style="color: #2c6e9e;"></i> Индивидуальный график сотрудников
+            </h1>
+
+            <!-- Карточка выбора + форма -->
+            <div class="form-card">
+                <div class="form-title">
+                    <i class="fas fa-user-check"></i> Выбор сотрудника
+                </div>
+                <form id="selectionForm">
+                    <div class="form-grid">
+                        <div class="input-group">
+                            <label><i class="fas fa-handshake"></i> Альянс</label>
+                            <select id="alliance" required onchange="updateGroups()">
+                                <option value="">-- Выберите альянс --</option>
+                                <option value="Пупкина">Альянс Пупкина</option>
+                                <option value="Тумбочкина">Альянс Тумбочкина</option>
+                                <option value="Петровича">Альянс Петровича</option>
+                                <option value="Сидоровича">Альянс Сидоровича</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-layer-group"></i> Группа</label>
+                            <select id="group" required onchange="updateEmployees()" disabled>
+                                <option value="">-- Сначала выберите альянс --</option>
+                            </select>
+                        </div>
+                        <div class="input-group">
+                            <label><i class="fas fa-user"></i> Сотрудник</label>
+                            <select id="employee" required disabled>
+                                <option value="">-- Сначала выберите группу --</option>
+                            </select>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Форма графика -->
+            <form id="scheduleForm" style="display: none;" class="form-card">
+                <div class="form-title"><i class="fas fa-clock"></i> Добавление смены</div>
+                <div class="form-grid">
+                    <div class="input-group">
+                        <label><i class="fas fa-calendar-day"></i> Дата</label>
+                        <select id="date" required></select>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-hourglass-start"></i> Начало</label>
+                        <select id="startTime" required onchange="toggleEndTime()"></select>
+                    </div>
+                    <div class="input-group">
+                        <label><i class="fas fa-hourglass-end"></i> Конец</label>
+                        <select id="endTime" required disabled></select>
+                    </div>
+                </div>
+                <div id="consecutiveWarning" class="alert" style="display: none;"></div>
+                <button type="submit"><i class="fas fa-plus-circle"></i> Добавить график</button>
+            </form>
+
+            <!-- Детали сотрудника -->
+            <div id="employeeDetails" class="employee-details" style="display: none;">
+                <button class="back-btn" onclick="hideEmployeeDetails()"><i class="fas fa-arrow-left"></i> Назад к списку</button>
+                <h3 id="detailsEmployeeName" style="margin-bottom: 6px;"></h3>
+                <div id="detailsAllianceGroup" style="color: #4b6b8f; margin-bottom: 16px;"></div>
+                <div id="shiftsList" class="shift-list"></div>
+            </div>
+
+            <h2 style="margin: 28px 0 16px 0; display: flex; align-items: center; gap: 10px;"><i class="fas fa-table-list"></i> Сводная таблица графиков</h2>
+            <div id="employeesTable"></div>
+        </div>
+
+        <!-- Боковая панель сводки -->
+        <div class="summary">
+            <div class="summary-header">
+                <h2><i class="fas fa-chart-pie"></i> Общий свод</h2>
+            </div>
+            <div class="summary-content">
+                <div id="summaryWeekdays"></div>
+                <div id="summaryWeekends" class="alert-badge"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Модалка -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDeleteModal()">&times;</span>
+            <h3 style="margin-bottom: 10px;"><i class="fas fa-trash-alt"></i> Подтверждение</h3>
+            <p id="deleteModalMessage">Вы уверены?</p>
+            <div class="modal-buttons">
+                <button class="cancel-btn" onclick="closeDeleteModal()">Отмена</button>
+                <button class="confirm-btn" id="confirmDeleteBtn">Удалить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="./script/JavaScript.js"></script>
+</body>
+</html>
