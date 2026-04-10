@@ -55,14 +55,13 @@ python app.py
 ## Структура файлов
 
 ```
-app/
-├── app.py              # Flask маршруты и логика
-├── database.py         # Инициализация БД и вспомогательные функции
-├── schedule.db         # SQLite база (создаётся автоматически)
-└── templates/
-    ├── login.html      # Страница входа
-    ├── employee.html   # Интерфейс сотрудника
-    └── manager.html    # Интерфейс руководителя
+app.py              # Flask маршруты и логика
+database.py         # Инициализация БД и вспомогательные функции
+schedule.db         # SQLite база (создаётся автоматически)
+templates/
+  ├── login.html      # Страница входа
+  ├── employee.html   # Интерфейс сотрудника
+  └── manager.html    # Интерфейс руководителя
 ```
 
 ## API эндпоинты
