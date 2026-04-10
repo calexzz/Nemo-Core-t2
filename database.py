@@ -7,7 +7,7 @@ DB_PATH = 'schedule.db'
 def get_db():
     """Подключение к БД"""
     conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row  # строки как словари
+    conn.row_factory = sqlite3.Row
     return conn
 
 def hash_password(password):
@@ -26,9 +26,9 @@ def init_db():
             username TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
             full_name TEXT NOT NULL,
-            role TEXT NOT NULL,          -- 'admin', 'manager', 'employee'
-            alliance TEXT,               -- альянс (подразделение верхнего уровня)
-            team TEXT                    -- группа внутри альянса
+            role TEXT NOT NULL,
+            alliance TEXT,
+            team TEXT
         )
     ''')
 
@@ -37,19 +37,35 @@ def init_db():
         CREATE TABLE IF NOT EXISTS shifts (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             user_id INTEGER NOT NULL,
-            shift_date TEXT NOT NULL,    -- формат YYYY-MM-DD
-            start_time TEXT NOT NULL,    -- 'HH:MM' или 'Выходной'
-            end_time TEXT,               -- 'HH:MM' или пусто
-            status TEXT DEFAULT 'plan',  -- 'plan' или 'fact'
+            shift_date TEXT NOT NULL,
+            start_time TEXT NOT NULL,
+            end_time TEXT,
+            status TEXT DEFAULT 'plan',
             FOREIGN KEY (user_id) REFERENCES users(id)
+        )
+    ''')
+
+    # Таблица заявок на изменение смен
+    c.execute('''
+        CREATE TABLE IF NOT EXISTS shift_requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id INTEGER NOT NULL,
+            shift_id INTEGER,
+            shift_date TEXT NOT NULL,
+            start_time TEXT,
+            end_time TEXT,
+            request_type TEXT NOT NULL,
+            status TEXT DEFAULT 'pending',
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (user_id) REFERENCES users(id),
+            FOREIGN KEY (shift_id) REFERENCES shifts(id)
         )
     ''')
 
     conn.commit()
 
-    # Добавляем тестовых пользователей если их нет
+    # Тестовые пользователи
     users = [
-        # (username, password, full_name, role, alliance, team)
         ('admin', 'admin123', 'Администратор', 'admin', None, None),
         ('manager1', 'pass123', 'Пупкин Иван Иванович', 'manager', 'Пупкина', None),
         ('manager2', 'pass123', 'Тумбочкин Петр Петрович', 'manager', 'Тумбочкина', None),
@@ -68,7 +84,7 @@ def init_db():
                 (username, hash_password(password), full_name, role, alliance, team)
             )
         except sqlite3.IntegrityError:
-            pass  # пользователь уже существует
+            pass
 
     conn.commit()
     conn.close()
