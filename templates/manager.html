@@ -16,10 +16,15 @@
             align-items: center;
             justify-content: space-between;
         }
-        .header h1 { font-size: 18px; }
+        .header h1 { font-size: 18px; display: flex; align-items: center; gap: 10px; }
+        /* Заготовка под иконку логотипа в шапке */
+        .icon-header { width: 24px; height: 24px; display: inline-block; background: #4472C4; border-radius: 4px; }
         .header a { color: #7eb8f7; text-decoration: none; font-size: 13px; }
         .header a:hover { text-decoration: underline; }
         .header .nav { display: flex; gap: 16px; align-items: center; }
+
+        /* Заготовка под иконку в кнопке экспорта */
+        .icon-btn { width: 16px; height: 16px; display: inline-block; background: rgba(255,255,255,0.5); border-radius: 2px; vertical-align: middle; margin-right: 4px; }
 
         .container { max-width: 1200px; margin: 24px auto; padding: 0 16px; }
 
@@ -30,13 +35,10 @@
             box-shadow: 0 1px 6px rgba(0,0,0,0.08);
             margin-bottom: 16px;
         }
-        .card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 16px;
-        }
-        .card h2 { font-size: 16px; color: #222; }
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .card h2 { font-size: 16px; color: #222; display: flex; align-items: center; gap: 8px; }
+        /* Заготовка под иконки заголовков карточек */
+        .icon-sm { width: 18px; height: 18px; display: inline-block; background: #ddd; border-radius: 3px; flex-shrink: 0; }
 
         .btn {
             padding: 8px 16px;
@@ -45,15 +47,102 @@
             cursor: pointer;
             font-size: 13px;
             font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
         }
         .btn-primary { background: #4472C4; color: white; }
         .btn-primary:hover { background: #3560b0; }
-        .btn-success { background: #28a745; color: white; }
+        .btn-success { background: #28a745; color: white; text-decoration: none; }
         .btn-success:hover { background: #218838; }
-        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger  { background: #e74c3c; color: white; }
+        .btn-approve { background: #28a745; color: white; }
+        .btn-reject  { background: #e74c3c; color: white; }
         .btn-sm { padding: 4px 10px; font-size: 12px; }
 
-        /* Таблица сотрудников */
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        .badge-admin    { background: #fdecea; color: #c0392b; }
+        .badge-manager  { background: #fff3cd; color: #856404; }
+        .badge-employee { background: #d4edda; color: #155724; }
+
+        .shifts-matrix { width: 100%; border-collapse: collapse; font-size: 12px; }
+        .shifts-matrix th, .shifts-matrix td {
+            border: 1px solid #e0e0e0;
+            padding: 6px 8px;
+            text-align: center;
+            white-space: nowrap;
+        }
+        .shifts-matrix th { background: #f5f7fb; font-weight: bold; }
+        .shifts-matrix .name-col { text-align: left; font-weight: bold; min-width: 150px; }
+        .cell-work  { background: #d4edda; color: #155724; }
+        .cell-off   { background: #f0f0f0; color: #888; }
+        .cell-empty { color: #ccc; }
+        .cell-weekend { background: #fff3cd; }
+
+        .filters { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
+        .filters select, .filters input {
+            padding: 7px 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 13px;
+        }
+
+        .stats-row { display: flex; gap: 12px; margin-bottom: 16px; }
+        .stat-card {
+            flex: 1;
+            background: white;
+            border-radius: 8px;
+            padding: 14px 16px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        .stat-card .num  { font-size: 26px; font-weight: bold; color: #4472C4; }
+        .stat-card .lbl  { font-size: 12px; color: #777; margin-top: 4px; }
+        /* Заготовки под иконки карточек статистики */
+        .stat-icon { width: 28px; height: 28px; background: #e8edf8; border-radius: 50%; margin: 0 auto 6px; }
+
+        .tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab {
+            padding: 9px 20px;
+            border: 1px solid #ddd;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+        }
+        /* Заготовки под иконки вкладок */
+        .icon-tab { width: 16px; height: 16px; display: inline-block; background: #bbb; border-radius: 2px; }
+        .tab.active { background: #4472C4; color: white; border-color: #4472C4; }
+        .tab.active .icon-tab { background: rgba(255,255,255,0.5); }
+
+        /* Счётчик непрочитанных уведомлений */
+        .notif-badge {
+            position: absolute;
+            top: -6px;
+            right: -6px;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
         .employee-table { width: 100%; border-collapse: collapse; }
         .employee-table th, .employee-table td {
             border: 1px solid #e0e0e0;
@@ -64,58 +153,39 @@
         .employee-table th { background: #f5f7fb; font-weight: bold; color: #444; }
         .employee-table tr:hover td { background: #fafbff; }
 
-        .badge {
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-        .badge-admin { background: #fdecea; color: #c0392b; }
-        .badge-manager { background: #fff3cd; color: #856404; }
-        .badge-employee { background: #d4edda; color: #155724; }
-
-        /* Матрица смен */
-        .shifts-matrix { width: 100%; border-collapse: collapse; font-size: 12px; }
-        .shifts-matrix th, .shifts-matrix td {
-            border: 1px solid #e0e0e0;
-            padding: 6px 8px;
-            text-align: center;
-            white-space: nowrap;
-        }
-        .shifts-matrix th { background: #f5f7fb; font-weight: bold; }
-        .shifts-matrix .name-col { text-align: left; font-weight: bold; min-width: 150px; }
-        .cell-work { background: #d4edda; color: #155724; }
-        .cell-off { background: #f0f0f0; color: #888; }
-        .cell-empty { color: #ccc; }
-        .cell-weekend { background: #fff3cd; }
-
-        /* Фильтры */
-        .filters { display: flex; gap: 12px; margin-bottom: 16px; align-items: center; flex-wrap: wrap; }
-        .filters select, .filters input {
-            padding: 7px 10px;
-            border: 1px solid #ddd;
+        .alert {
+            padding: 10px 12px;
             border-radius: 5px;
             font-size: 13px;
+            margin-bottom: 10px;
         }
+        .alert-warning { background: #fff3cd; border: 1px solid #ffc107; color: #856404; }
 
-        /* Статистика */
-        .stats-row { display: flex; gap: 12px; margin-bottom: 16px; }
-        .stat-card {
-            flex: 1;
-            background: white;
-            border-radius: 8px;
-            padding: 14px 16px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.08);
-            text-align: center;
+        /* Уведомления */
+        .notif-item {
+            padding: 10px 14px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            border-left: 4px solid #e74c3c;
+            background: #fff5f5;
+            font-size: 13px;
         }
-        .stat-card .num { font-size: 26px; font-weight: bold; color: #4472C4; }
-        .stat-card .lbl { font-size: 12px; color: #777; margin-top: 4px; }
+        .notif-item.read { opacity: 0.6; border-left-color: #ccc; background: #fafafa; }
+        .notif-date { font-size: 11px; color: #aaa; margin-top: 4px; }
 
-        /* Вкладки */
-        .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
-        .tab { padding: 9px 20px; border: 1px solid #ddd; background: white; border-radius: 5px; cursor: pointer; font-size: 13px; font-weight: bold; }
-        .tab.active { background: #4472C4; color: white; border-color: #4472C4; }
+        /* Переработки */
+        .overtime-item {
+            padding: 12px;
+            border-radius: 5px;
+            margin-bottom: 8px;
+            border: 1px solid #e0e0e0;
+            font-size: 13px;
+        }
+        .ot-pending  { background: #fffbf0; border-color: #ffc107; }
+        .ot-approved { background: #f0fff4; border-color: #28a745; }
+        .ot-rejected { background: #fff5f5; border-color: #e74c3c; }
+        .ot-actions  { display: flex; gap: 8px; margin-top: 8px; align-items: center; }
+        .ot-comment  { flex: 1; padding: 6px 8px; border: 1px solid #ddd; border-radius: 4px; font-size: 12px; }
 
         /* Модалка */
         .modal {
@@ -131,7 +201,7 @@
             background: white;
             border-radius: 8px;
             padding: 24px;
-            width: 420px;
+            width: 440px;
             box-shadow: 0 4px 24px rgba(0,0,0,0.15);
         }
         .modal-box h3 { margin-bottom: 16px; }
@@ -146,19 +216,27 @@
             font-size: 13px;
         }
         #addUserError { color: #c0392b; font-size: 13px; margin-top: 8px; }
+        .hint-text { font-size: 12px; color: #888; margin-top: 3px; }
     </style>
 </head>
 <body>
 
 <div class="header">
-    <h1>📊 Панель руководителя</h1>
+    <h1>
+        <!-- Заготовка под иконку логотипа: замените span на <img src="..." width="24" height="24"> -->
+        <span class="icon-header"></span>
+        Панель руководителя
+    </h1>
     <div class="nav">
         <span style="color:#aaa; font-size:13px;">{{ user.full_name }}</span>
-        <span style="color:#666; font-size:13px;">|</span>
         <span class="badge badge-{{ user.role }}" style="font-size:12px;">
             {{ {'admin':'Администратор','manager':'Менеджер','employee':'Сотрудник'}[user.role] }}
         </span>
-        <a href="/export/excel" style="background:#28a745; color:white; padding:6px 14px; border-radius:5px; font-size:13px; text-decoration:none;">⬇️ Excel</a>
+        <!-- Заготовка под иконку кнопки экспорта: замените span на <img> -->
+        <a href="/export/excel" class="btn btn-success" style="padding:6px 14px; font-size:13px;">
+            <span class="icon-btn"></span>
+            Выгрузить Excel
+        </a>
         <a href="/logout">Выйти</a>
     </div>
 </div>
@@ -168,31 +246,59 @@
     <!-- Статистика -->
     <div class="stats-row">
         <div class="stat-card">
-            <div class="num" id="statEmployees">{{ employees | length }}</div>
+            <!-- Заготовка под иконку: замените div.stat-icon на <img> -->
+            <div class="stat-icon"></div>
+            <div class="num">{{ employees | length }}</div>
             <div class="lbl">Сотрудников</div>
         </div>
         <div class="stat-card">
-            <div class="num" id="statTotalShifts">{{ employees | sum(attribute='total_shifts') }}</div>
+            <div class="stat-icon"></div>
+            <div class="num">{{ employees | sum(attribute='total_shifts') }}</div>
             <div class="lbl">Смен запланировано</div>
         </div>
         <div class="stat-card">
-            <div class="num" id="statAvg">
+            <div class="stat-icon"></div>
+            <div class="num">
                 {% if employees %}{{ (employees | sum(attribute='total_shifts') / employees | length) | round(1) }}{% else %}0{% endif %}
             </div>
             <div class="lbl">Среднее смен на сотрудника</div>
         </div>
         <div class="stat-card">
-            <div class="num">{{ (employees | selectattr('total_shifts', 'gt', 0) | list | length) }}</div>
-            <div class="lbl">С заполненным графиком</div>
+            <div class="stat-icon"></div>
+            <div class="num">{{ overtime_requests | selectattr('status','equalto','pending') | list | length }}</div>
+            <div class="lbl">Запросов на переработку</div>
         </div>
     </div>
 
     <!-- Вкладки -->
     <div class="tabs">
-        <button class="tab active" onclick="switchTab('matrix', this)">📆 Матрица смен</button>
-        <button class="tab" onclick="switchTab('list', this)">👥 Список сотрудников</button>
+        <button class="tab active" onclick="switchTab('matrix', this)">
+            <span class="icon-tab"></span>
+            Матрица смен
+        </button>
+        <button class="tab" onclick="switchTab('list', this)">
+            <span class="icon-tab"></span>
+            Сотрудники
+        </button>
+        <button class="tab" onclick="switchTab('overtime', this)">
+            <span class="icon-tab"></span>
+            Переработки
+            {% if overtime_requests | selectattr('status','equalto','pending') | list | length > 0 %}
+            <span class="notif-badge">{{ overtime_requests | selectattr('status','equalto','pending') | list | length }}</span>
+            {% endif %}
+        </button>
+        <button class="tab" onclick="switchTab('notif', this)" id="notifTab">
+            <span class="icon-tab"></span>
+            Уведомления
+            {% if unread_count > 0 %}
+            <span class="notif-badge" id="unreadBadge">{{ unread_count }}</span>
+            {% endif %}
+        </button>
         {% if user.role == 'admin' %}
-        <button class="tab" onclick="switchTab('users', this)">⚙️ Управление пользователями</button>
+        <button class="tab" onclick="switchTab('users', this)">
+            <span class="icon-tab"></span>
+            Пользователи
+        </button>
         {% endif %}
     </div>
 
@@ -200,30 +306,22 @@
     <div id="tabMatrix">
         <div class="card">
             <div class="card-header">
-                <h2>Матрица смен на 14 дней</h2>
+                <h2><span class="icon-sm"></span>Матрица смен на 14 дней</h2>
                 <div class="filters">
                     <select id="filterAlliance" onchange="filterMatrix()">
                         <option value="">Все альянсы</option>
                         {% set alliances = employees | map(attribute='alliance') | unique | list %}
-                        {% for a in alliances %}
-                        {% if a %}
-                        <option value="{{ a }}">{{ a }}</option>
-                        {% endif %}
-                        {% endfor %}
+                        {% for a in alliances %}{% if a %}<option value="{{ a }}">{{ a }}</option>{% endif %}{% endfor %}
                     </select>
                     <select id="filterTeam" onchange="filterMatrix()">
                         <option value="">Все группы</option>
                         {% set teams = employees | map(attribute='team') | unique | list %}
-                        {% for t in teams %}
-                        {% if t %}
-                        <option value="{{ t }}">{{ t }}</option>
-                        {% endif %}
-                        {% endfor %}
+                        {% for t in teams %}{% if t %}<option value="{{ t }}">{{ t }}</option>{% endif %}{% endfor %}
                     </select>
                 </div>
             </div>
             <div style="overflow-x:auto;">
-                <table class="shifts-matrix" id="matrixTable">
+                <table class="shifts-matrix">
                     <thead id="matrixHead"></thead>
                     <tbody id="matrixBody"></tbody>
                 </table>
@@ -235,42 +333,89 @@
     <div id="tabList" style="display:none;">
         <div class="card">
             <div class="card-header">
-                <h2>Сотрудники и их графики</h2>
-                <input type="text" placeholder="🔍 Поиск по имени..." oninput="filterList(this.value)" style="width:220px;">
+                <h2><span class="icon-sm"></span>Сотрудники</h2>
+                <input type="text" placeholder="Поиск по имени..." oninput="filterList(this.value)" style="width:220px;padding:7px 10px;border:1px solid #ddd;border-radius:5px;font-size:13px;">
             </div>
-            <table class="employee-table" id="employeeList">
+            <table class="employee-table">
                 <thead>
-                    <tr>
-                        <th>Сотрудник</th>
-                        <th>Альянс</th>
-                        <th>Группа</th>
-                        <th>Всего смен</th>
-                        <th>Ближайшие смены</th>
-                    </tr>
+                    <tr><th>Сотрудник</th><th>Альянс</th><th>Группа</th><th>Смен</th><th>Ближайшие даты</th></tr>
                 </thead>
                 <tbody id="listBody"></tbody>
             </table>
         </div>
     </div>
 
-    <!-- УПРАВЛЕНИЕ ПОЛЬЗОВАТЕЛЯМИ (только admin) -->
+    <!-- ПЕРЕРАБОТКИ -->
+    <div id="tabOvertime" style="display:none;">
+        <div class="card">
+            <h2><span class="icon-sm"></span>Запросы на переработку</h2>
+            {% if not overtime_requests %}
+            <p style="color:#aaa; font-size:14px; padding:20px 0;">Нет запросов</p>
+            {% else %}
+            {% for ot in overtime_requests %}
+            <div class="overtime-item ot-{{ ot.status }}" id="ot-{{ ot.id }}">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start;">
+                    <div>
+                        <b>{{ ot.full_name }}</b> — неделя с {{ ot.week_start }}<br>
+                        <span style="color:#666;">Запланировано {{ ot.planned_hours }} ч, переработка +{{ ot.extra_hours }} ч</span>
+                    </div>
+                    <div>
+                        {% if ot.status == 'pending' %}
+                        <span class="badge" style="background:#fff3cd;color:#856404;">На рассмотрении</span>
+                        {% elif ot.status == 'approved' %}
+                        <span class="badge badge-employee">Одобрено</span>
+                        {% else %}
+                        <span class="badge badge-admin">Отклонено</span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if ot.admin_comment %}
+                <div style="margin-top:6px; font-size:12px; color:#666;">Комментарий: {{ ot.admin_comment }}</div>
+                {% endif %}
+                {% if ot.status == 'pending' %}
+                <div class="ot-actions">
+                    <input type="text" class="ot-comment" placeholder="Комментарий (необязательно)" id="comment-{{ ot.id }}">
+                    <button class="btn btn-approve btn-sm" onclick="reviewOvertime({{ ot.id }}, 'approved')">Одобрить</button>
+                    <button class="btn btn-reject btn-sm" onclick="reviewOvertime({{ ot.id }}, 'rejected')">Отклонить</button>
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- УВЕДОМЛЕНИЯ -->
+    <div id="tabNotif" style="display:none;">
+        <div class="card">
+            <div class="card-header">
+                <h2><span class="icon-sm"></span>Уведомления</h2>
+                <button class="btn btn-primary btn-sm" onclick="markAllRead()">Отметить все как прочитанные</button>
+            </div>
+            {% if not notifications %}
+            <p style="color:#aaa; font-size:14px; padding:20px 0;">Нет уведомлений</p>
+            {% else %}
+            {% for n in notifications %}
+            <div class="notif-item{{ ' read' if n.is_read else '' }}">
+                <div>{{ n.message }}</div>
+                <div class="notif-date">{{ n.created_at }} — {{ n.full_name }}</div>
+            </div>
+            {% endfor %}
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ПОЛЬЗОВАТЕЛИ (только admin) -->
     {% if user.role == 'admin' %}
     <div id="tabUsers" style="display:none;">
         <div class="card">
             <div class="card-header">
-                <h2>Все пользователи</h2>
-                <button class="btn btn-primary" onclick="openAddUserModal()">+ Добавить пользователя</button>
+                <h2><span class="icon-sm"></span>Пользователи</h2>
+                <button class="btn btn-primary" onclick="openAddUserModal()">+ Добавить</button>
             </div>
-            <table class="employee-table" id="usersTable">
+            <table class="employee-table">
                 <thead>
-                    <tr>
-                        <th>Логин</th>
-                        <th>ФИО</th>
-                        <th>Роль</th>
-                        <th>Альянс</th>
-                        <th>Группа</th>
-                        <th>Действия</th>
-                    </tr>
+                    <tr><th>Логин</th><th>ФИО</th><th>Роль</th><th>Альянс</th><th>Группа</th><th>Действия</th></tr>
                 </thead>
                 <tbody id="usersBody"></tbody>
             </table>
@@ -283,11 +428,12 @@
 <!-- Модалка добавления пользователя -->
 <div id="addUserModal" class="modal">
     <div class="modal-box">
-        <h3>➕ Новый пользователь</h3>
+        <h3>Новый пользователь</h3>
         <label>Логин</label>
         <input type="text" id="newUsername" placeholder="Например: ivan_petrov">
         <label>Пароль</label>
-        <input type="password" id="newPassword" placeholder="Минимум 6 символов">
+        <input type="password" id="newPassword" placeholder="Минимум 8 символов">
+        <div class="hint-text">Не менее 8 символов</div>
         <label>ФИО</label>
         <input type="text" id="newFullName" placeholder="Иванов Иван Иванович">
         <label>Роль</label>
@@ -309,116 +455,126 @@
 </div>
 
 <script>
-    // Данные с сервера
     const employees = {{ employees | tojson }};
-    const dates = {{ dates | tojson }};
-
+    const dates     = {{ dates | tojson }};
     const WEEKDAYS_SHORT = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
 
-    // ─── Матрица смен ──────────────────────────────────────────────────────
+    // ─── Матрица ────────────────────────────────────────────────────────
     function buildMatrix(data) {
         const head = document.getElementById('matrixHead');
         const body = document.getElementById('matrixBody');
 
-        // Заголовок: Сотрудник + даты
         let headRow = '<tr><th class="name-col">Сотрудник</th>';
         dates.forEach(d => {
             const dt = new Date(d.value + 'T00:00:00');
-            const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
-            const dayName = WEEKDAYS_SHORT[dt.getDay()];
-            const dayNum = dt.getDate();
-            headRow += `<th${isWeekend ? ' style="color:#e74c3c;"' : ''}>${dayNum}<br><span style="font-weight:normal;font-size:10px;">${dayName}</span></th>`;
+            const isWE = dt.getDay() === 0 || dt.getDay() === 6;
+            headRow += `<th${isWE ? ' style="color:#e74c3c;"' : ''}>${dt.getDate()}<br><span style="font-weight:normal;font-size:10px;">${WEEKDAYS_SHORT[dt.getDay()]}</span></th>`;
         });
-        headRow += '<th>Итого</th></tr>';
+        headRow += '<th>Итого ч</th></tr>';
         head.innerHTML = headRow;
 
         body.innerHTML = '';
         data.forEach(emp => {
-            const shiftsMap = {};
-            (emp.shifts || []).forEach(s => { shiftsMap[s.shift_date] = s; });
+            const sMap = {};
+            (emp.shifts||[]).forEach(s => { sMap[s.shift_date] = s; });
 
-            let row = `<tr><td class="name-col">${emp.full_name}<br><span style="font-weight:normal;color:#888;font-size:11px;">${emp.team || ''}</span></td>`;
-            let count = 0;
+            let row = `<tr><td class="name-col">${emp.full_name}<br><span style="font-weight:normal;color:#888;font-size:11px;">${emp.team||''}</span></td>`;
+            let hours = 0;
             dates.forEach(d => {
                 const dt = new Date(d.value + 'T00:00:00');
-                const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
-                const shift = shiftsMap[d.value];
+                const isWE = dt.getDay() === 0 || dt.getDay() === 6;
+                const shift = sMap[d.value];
                 if (shift) {
                     if (shift.start_time === 'Выходной') {
                         row += `<td class="cell-off">—</td>`;
                     } else {
-                        count++;
-                        const label = shift.start_time + (shift.end_time ? '–' + shift.end_time : '');
-                        row += `<td class="cell-work${isWeekend ? ' cell-weekend' : ''}">${label}</td>`;
+                        const label = shift.start_time + (shift.end_time ? '–'+shift.end_time : '');
+                        // Считаем часы
+                        if (shift.end_time) {
+                            const [sh,sm] = shift.start_time.split(':').map(Number);
+                            const [eh,em] = shift.end_time.split(':').map(Number);
+                            let sM = sh*60+sm, eM = eh*60+em;
+                            if (eM <= sM) eM += 1440;
+                            hours += (eM-sM)/60;
+                        }
+                        row += `<td class="cell-work${isWE?' cell-weekend':''}">${label}</td>`;
                     }
                 } else {
-                    row += `<td class="cell-empty"${isWeekend ? ' style="background:#fafafa;"' : ''}>·</td>`;
+                    row += `<td class="cell-empty"${isWE?' style="background:#fafafa;"':''}>&middot;</td>`;
                 }
             });
-            row += `<td style="font-weight:bold;text-align:center;">${count}</td></tr>`;
+            row += `<td style="font-weight:bold;text-align:center;">${hours.toFixed(1)}</td></tr>`;
             body.innerHTML += row;
         });
     }
 
     function filterMatrix() {
-        const alliance = document.getElementById('filterAlliance').value;
+        const al   = document.getElementById('filterAlliance').value;
         const team = document.getElementById('filterTeam').value;
         let filtered = employees;
-        if (alliance) filtered = filtered.filter(e => e.alliance === alliance);
+        if (al)   filtered = filtered.filter(e => e.alliance === al);
         if (team) filtered = filtered.filter(e => e.team === team);
         buildMatrix(filtered);
     }
 
-    // ─── Список сотрудников ────────────────────────────────────────────────
+    // ─── Список ─────────────────────────────────────────────────────────
     function buildList(data) {
         const body = document.getElementById('listBody');
         body.innerHTML = '';
         data.forEach(emp => {
-            const recentShifts = (emp.shifts || [])
+            const recent = (emp.shifts||[])
                 .filter(s => s.start_time !== 'Выходной')
-                .slice(0, 3)
-                .map(s => s.shift_date)
-                .join(', ');
+                .slice(0,3).map(s => s.shift_date).join(', ');
             body.innerHTML += `
                 <tr>
                     <td><b>${emp.full_name}</b></td>
-                    <td>${emp.alliance || '—'}</td>
-                    <td>${emp.team || '—'}</td>
+                    <td>${emp.alliance||'—'}</td>
+                    <td>${emp.team||'—'}</td>
                     <td><b>${emp.total_shifts}</b></td>
-                    <td style="color:#666;">${recentShifts || '—'}</td>
-                </tr>
-            `;
+                    <td style="color:#666;">${recent||'—'}</td>
+                </tr>`;
         });
     }
 
-    function filterList(query) {
-        const filtered = employees.filter(e =>
-            e.full_name.toLowerCase().includes(query.toLowerCase())
-        );
-        buildList(filtered);
+    function filterList(q) {
+        buildList(employees.filter(e => e.full_name.toLowerCase().includes(q.toLowerCase())));
     }
 
-    // ─── Управление пользователями ─────────────────────────────────────────
+    // ─── Переработки ────────────────────────────────────────────────────
+    async function reviewOvertime(id, status) {
+        const comment = document.getElementById(`comment-${id}`)?.value || '';
+        const res = await fetch(`/api/overtime/${id}/review`, {
+            method: 'POST',
+            headers: {'Content-Type':'application/json'},
+            body: JSON.stringify({status, comment})
+        });
+        if (res.ok) location.reload();
+    }
+
+    // ─── Уведомления ────────────────────────────────────────────────────
+    async function markAllRead() {
+        await fetch('/api/notifications/read', {method:'POST'});
+        location.reload();
+    }
+
+    // ─── Пользователи ───────────────────────────────────────────────────
     async function loadUsers() {
-        const res = await fetch('/api/users');
+        const res   = await fetch('/api/users');
         const users = await res.json();
-        const body = document.getElementById('usersBody');
+        const body  = document.getElementById('usersBody');
         if (!body) return;
-        const roleLabels = { admin: '👑 Админ', manager: '👔 Менеджер', employee: '👤 Сотрудник' };
+        const labels = {admin:'Администратор', manager:'Менеджер', employee:'Сотрудник'};
         body.innerHTML = '';
         users.forEach(u => {
             body.innerHTML += `
                 <tr>
                     <td><code>${u.username}</code></td>
                     <td>${u.full_name}</td>
-                    <td>${roleLabels[u.role] || u.role}</td>
-                    <td>${u.alliance || '—'}</td>
-                    <td>${u.team || '—'}</td>
-                    <td>
-                        <button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id}, '${u.full_name}')">🗑️</button>
-                    </td>
-                </tr>
-            `;
+                    <td>${labels[u.role]||u.role}</td>
+                    <td>${u.alliance||'—'}</td>
+                    <td>${u.team||'—'}</td>
+                    <td><button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id},'${u.full_name}')">Удалить</button></td>
+                </tr>`;
         });
     }
 
@@ -426,56 +582,54 @@
         document.getElementById('addUserModal').classList.add('show');
         document.getElementById('addUserError').textContent = '';
     }
-    function closeAddUserModal() {
-        document.getElementById('addUserModal').classList.remove('show');
-    }
+    function closeAddUserModal() { document.getElementById('addUserModal').classList.remove('show'); }
 
     async function addUser() {
+        const password = document.getElementById('newPassword').value;
+        if (password.length < 8) {
+            document.getElementById('addUserError').textContent = 'Пароль должен быть не менее 8 символов';
+            return;
+        }
         const data = {
-            username: document.getElementById('newUsername').value.trim(),
-            password: document.getElementById('newPassword').value,
+            username:  document.getElementById('newUsername').value.trim(),
+            password,
             full_name: document.getElementById('newFullName').value.trim(),
-            role: document.getElementById('newRole').value,
-            alliance: document.getElementById('newAlliance').value.trim(),
-            team: document.getElementById('newTeam').value.trim()
+            role:      document.getElementById('newRole').value,
+            alliance:  document.getElementById('newAlliance').value.trim(),
+            team:      document.getElementById('newTeam').value.trim()
         };
-        if (!data.username || !data.password || !data.full_name) {
+        if (!data.username || !data.full_name) {
             document.getElementById('addUserError').textContent = 'Заполните все обязательные поля';
             return;
         }
-        const res = await fetch('/api/users/add', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(data)
-        });
+        const res    = await fetch('/api/users/add', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
         const result = await res.json();
-        if (!res.ok) {
-            document.getElementById('addUserError').textContent = result.error;
-            return;
-        }
+        if (!res.ok) { document.getElementById('addUserError').textContent = result.error; return; }
         closeAddUserModal();
         loadUsers();
     }
 
     async function deleteUser(id, name) {
-        if (!confirm(`Удалить пользователя "${name}" и все его смены?`)) return;
-        await fetch(`/api/users/delete/${id}`, { method: 'POST' });
+        if (!confirm(`Удалить "${name}" и все его данные?`)) return;
+        await fetch(`/api/users/delete/${id}`, {method:'POST'});
         loadUsers();
     }
 
-    // ─── Переключение вкладок ──────────────────────────────────────────────
+    // ─── Переключение вкладок ────────────────────────────────────────────
     function switchTab(tab, btn) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         btn.classList.add('active');
-        document.getElementById('tabMatrix').style.display = tab === 'matrix' ? 'block' : 'none';
-        document.getElementById('tabList').style.display = tab === 'list' ? 'block' : 'none';
-        const usersTab = document.getElementById('tabUsers');
-        if (usersTab) usersTab.style.display = tab === 'users' ? 'block' : 'none';
+        ['tabMatrix','tabList','tabOvertime','tabNotif','tabUsers'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.style.display = 'none';
+        });
+        const map = {matrix:'tabMatrix', list:'tabList', overtime:'tabOvertime', notif:'tabNotif', users:'tabUsers'};
+        const el = document.getElementById(map[tab]);
+        if (el) el.style.display = 'block';
         if (tab === 'users') loadUsers();
     }
 
-    // ─── Инициализация ────────────────────────────────────────────────────
-    document.addEventListener('DOMContentLoaded', function() {
+    document.addEventListener('DOMContentLoaded', () => {
         buildMatrix(employees);
         buildList(employees);
     });

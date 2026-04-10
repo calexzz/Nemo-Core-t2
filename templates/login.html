@@ -6,107 +6,73 @@
     <title>Вход — График сотрудников</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-            font-family: Arial, sans-serif;
-            background: #f0f2f5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-        }
-        .login-box {
-            background: white;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
-            width: 360px;
-        }
-        h1 {
-            font-size: 22px;
-            margin-bottom: 6px;
-            color: #1a1a2e;
-        }
-        .subtitle {
-            color: #666;
-            font-size: 13px;
-            margin-bottom: 28px;
-        }
-        label {
-            display: block;
-            font-size: 13px;
-            font-weight: bold;
-            margin-bottom: 6px;
-            color: #333;
-        }
-        input {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-            margin-bottom: 18px;
-            transition: border-color 0.2s;
-        }
+        body { font-family: Arial, sans-serif; background: #f0f2f5; display: flex; align-items: center; justify-content: center; height: 100vh; }
+        .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); width: 360px; }
+        .logo { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+        /* Заготовка под логотип: замените div.logo-icon на <img src="..." width="36" height="36"> */
+        .logo-icon { width: 36px; height: 36px; background: #4472C4; border-radius: 6px; flex-shrink: 0; }
+        h1 { font-size: 22px; color: #1a1a2e; }
+        .subtitle { color: #666; font-size: 13px; margin-bottom: 28px; margin-left: 48px; }
+        label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: #333; }
+        input { width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; margin-bottom: 6px; transition: border-color 0.2s; }
         input:focus { outline: none; border-color: #4472C4; }
-        button {
-            width: 100%;
-            padding: 11px;
-            background: #4472C4;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 15px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+        .hint-text { font-size: 12px; color: #aaa; margin-bottom: 14px; }
+        button { width: 100%; padding: 11px; background: #4472C4; color: white; border: none; border-radius: 5px; font-size: 15px; cursor: pointer; font-weight: bold; margin-top: 8px; }
         button:hover { background: #3560b0; }
-        .error {
-            background: #fff0f0;
-            color: #c0392b;
-            border: 1px solid #f5c6cb;
-            padding: 10px 14px;
-            border-radius: 5px;
-            font-size: 13px;
-            margin-bottom: 16px;
-        }
-        .hint {
-            margin-top: 20px;
-            padding: 12px;
-            background: #f8f9ff;
-            border-radius: 5px;
-            font-size: 12px;
-            color: #555;
-            border: 1px solid #e0e4f0;
-        }
+        .error { background: #fff0f0; color: #c0392b; border: 1px solid #f5c6cb; padding: 10px 14px; border-radius: 5px; font-size: 13px; margin-bottom: 16px; }
+        .hint { margin-top: 20px; padding: 12px; background: #f8f9ff; border-radius: 5px; font-size: 12px; color: #555; border: 1px solid #e0e4f0; }
         .hint b { color: #333; }
         .hint div { margin-bottom: 4px; }
+        #pwdError { color: #c0392b; font-size: 12px; margin-bottom: 10px; display: none; }
     </style>
 </head>
 <body>
     <div class="login-box">
-        <h1>📅 График сотрудников</h1>
+        <div class="logo">
+            <!-- Заготовка под логотип: замените div.logo-icon на <img src="..." width="36" height="36"> -->
+            <div class="logo-icon"></div>
+            <h1>График сотрудников</h1>
+        </div>
         <div class="subtitle">Система планирования рабочих смен</div>
 
         {% if error %}
         <div class="error">{{ error }}</div>
         {% endif %}
 
-        <form method="POST">
+        <form method="POST" onsubmit="return validateForm()">
             <label for="username">Логин</label>
             <input type="text" id="username" name="username" required placeholder="Введите логин">
 
             <label for="password">Пароль</label>
-            <input type="password" id="password" name="password" required placeholder="Введите пароль">
+            <input type="password" id="password" name="password" required placeholder="Введите пароль"
+                   oninput="checkPwd()">
+            <div class="hint-text">Не менее 8 символов</div>
+            <div id="pwdError">Пароль должен содержать не менее 8 символов</div>
 
             <button type="submit">Войти</button>
         </form>
 
         <div class="hint">
             <b>Тестовые аккаунты:</b><br>
-            <div>👑 Админ: <code>admin</code> / <code>admin123</code></div>
-            <div>👔 Менеджер: <code>manager1</code> / <code>pass123</code></div>
-            <div>👤 Сотрудник: <code>siz_alex</code> / <code>pass123</code></div>
+            <div>Админ: <code>admin</code> / <code>admin123</code></div>
+            <div>Менеджер: <code>manager1</code> / <code>pass1234</code></div>
+            <div>Сотрудник: <code>siz_alex</code> / <code>pass1234</code></div>
         </div>
     </div>
+    <script>
+        function checkPwd() {
+            const pwd = document.getElementById('password').value;
+            const err = document.getElementById('pwdError');
+            err.style.display = (pwd.length > 0 && pwd.length < 8) ? 'block' : 'none';
+        }
+        function validateForm() {
+            const pwd = document.getElementById('password').value;
+            if (pwd.length < 8) {
+                document.getElementById('pwdError').style.display = 'block';
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>
