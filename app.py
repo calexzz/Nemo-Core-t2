@@ -116,10 +116,10 @@ def logout():
 def employee_schedule():
     user_id = session['user_id']
     conn = get_db()
-    shifts = conn.execute(
+    shifts = [dict(row) for row in conn.execute(
         'SELECT * FROM shifts WHERE user_id=? ORDER BY shift_date',
         (user_id,)
-    ).fetchall()
+    ).fetchall()]
     conn.close()
     dates = get_next_14_days()
     return render_template('employee.html',
