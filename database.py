@@ -1,21 +1,48 @@
 import sqlite3
 import hashlib
+import csv
 import os
 
 DB_PATH = 'schedule.db'
+CSV_PATH = 'users.csv'
 
 def get_db():
-    """Подключение к БД"""
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
 
 def hash_password(password):
-    """Хэш пароля"""
     return hashlib.sha256(password.encode()).hexdigest()
 
+def load_users_from_csv():
+    """Загружает пользователей из CSV-файла, если он существует и таблица users пуста"""
+    if not os.path.exists(CSV_PATH):
+        return False
+    conn = get_db()
+    c = conn.cursor()
+    # Проверяем, есть ли уже пользователи
+    c.execute("SELECT COUNT(*) as cnt FROM users")
+    count = c.fetchone()['cnt']
+    if count > 0:
+        conn.close()
+        return False
+    # Загружаем из CSV
+    with open(CSV_PATH, 'r', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            try:
+                c.execute(
+                    'INSERT INTO users (username, password, full_name, role, alliance, team) VALUES (?,?,?,?,?,?)',
+                    (row['username'], hash_password(row['password']), row['full_name'], row['role'], row['alliance'] or None, row['team'] or None)
+                )
+            except sqlite3.IntegrityError:
+                pass  # игнорируем дубликаты
+    conn.commit()
+    conn.close()
+    return True
+
 def init_db():
-    """Создание таблиц и тестовых данных"""
+    """Создание таблиц и загрузка данных из CSV"""
     conn = get_db()
     c = conn.cursor()
 
@@ -45,7 +72,7 @@ def init_db():
         )
     ''')
 
-    # Таблица заявок на изменение смен
+    # Таблица заявок
     c.execute('''
         CREATE TABLE IF NOT EXISTS shift_requests (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -63,28 +90,7 @@ def init_db():
     ''')
 
     conn.commit()
-
-    # Тестовые пользователи
-    users = [
-        ('admin', 'admin123', 'Администратор', 'admin', None, None),
-        ('manager1', 'pass123', 'Пупкин Иван Иванович', 'manager', 'Пупкина', None),
-        ('manager2', 'pass123', 'Тумбочкин Петр Петрович', 'manager', 'Тумбочкина', None),
-        ('siz_alex', 'pass123', 'Сизый Александр Петрович', 'employee', 'Пупкина', 'Группа Сизых'),
-        ('siz_mar', 'pass123', 'Сизый Мария Ивановна', 'employee', 'Пупкина', 'Группа Сизых'),
-        ('vas_ivan', 'pass123', 'Васильков Иван Сергеевич', 'employee', 'Пупкина', 'Группа Василькова'),
-        ('vas_olga', 'pass123', 'Василькова Ольга Васильевна', 'employee', 'Пупкина', 'Группа Василькова'),
-        ('kuz_vikt', 'pass123', 'Кузнецов Виктор Михайлович', 'employee', 'Тумбочкина', 'Группа Кузнецовых'),
-        ('kuz_svet', 'pass123', 'Кузнецова Светлана Викторовна', 'employee', 'Тумбочкина', 'Группа Кузнецовых'),
-    ]
-
-    for username, password, full_name, role, alliance, team in users:
-        try:
-            c.execute(
-                'INSERT INTO users (username, password, full_name, role, alliance, team) VALUES (?,?,?,?,?,?)',
-                (username, hash_password(password), full_name, role, alliance, team)
-            )
-        except sqlite3.IntegrityError:
-            pass
-
-    conn.commit()
     conn.close()
+
+    # Загружаем пользователей из CSV, если таблица пуста
+    load_users_from_csv()

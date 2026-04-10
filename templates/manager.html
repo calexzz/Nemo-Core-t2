@@ -20,7 +20,7 @@
         .header a { color: #7eb8f7; text-decoration: none; font-size: 13px; }
         .header .nav { display: flex; gap: 16px; align-items: center; }
 
-        .container { max-width: 1300px; margin: 24px auto; padding: 0 16px; }
+        .container { max-width: 1400px; margin: 24px auto; padding: 0 16px; }
 
         .card {
             background: white;
@@ -157,23 +157,31 @@
 </div>
 
 <div class="container">
+    <!-- Блок статистики - только для менеджера -->
+    {% if user.role == 'manager' %}
     <div class="stats-row">
         <div class="stat-card"><div class="num" id="statEmployees">{{ employees | length }}</div><div class="lbl">Сотрудников</div></div>
         <div class="stat-card"><div class="num" id="statTotalShifts">{{ employees | sum(attribute='total_shifts') }}</div><div class="lbl">Смен запланировано</div></div>
         <div class="stat-card"><div class="num" id="statAvg">{% if employees %}{{ (employees | sum(attribute='total_shifts') / employees | length) | round(1) }}{% else %}0{% endif %}</div><div class="lbl">Среднее смен</div></div>
         <div class="stat-card"><div class="num">{{ (employees | selectattr('total_shifts', 'gt', 0) | list | length) }}</div><div class="lbl">С заполненным графиком</div></div>
     </div>
+    {% endif %}
 
+    <!-- Вкладки -->
     <div class="tabs">
+        {% if user.role == 'manager' %}
         <button class="tab active" onclick="switchTab('matrix', this)">📆 Матрица смен</button>
         <button class="tab" onclick="switchTab('list', this)">👥 Список сотрудников</button>
         <button class="tab" onclick="switchTab('requests', this)">📨 Заявки</button>
+        {% endif %}
         {% if user.role == 'admin' %}
+        <button class="tab active" onclick="switchTab('list', this)">👥 Список сотрудников</button>
         <button class="tab" onclick="switchTab('users', this)">⚙️ Управление пользователями</button>
         {% endif %}
     </div>
 
-    <!-- МАТРИЦА СМЕН -->
+    <!-- Матрица (только менеджер) -->
+    {% if user.role == 'manager' %}
     <div id="tabMatrix">
         <div class="card">
             <div class="card-header">
@@ -188,37 +196,50 @@
                 </div>
             </div>
             <div style="overflow-x:auto;">
-                <table class="shifts-matrix" id="matrixTable"><thead id="matrixHead"></thead><tbody id="matrixBody"></tbody></table>
+                <table class="shifts-matrix" id="matrixTable">
+                    <thead id="matrixHead"></thead>
+                    <tbody id="matrixBody"></tbody>
+                </table>
             </div>
         </div>
     </div>
+    {% endif %}
 
-    <!-- СПИСОК СОТРУДНИКОВ -->
-    <div id="tabList" style="display:none;">
+    <!-- Список сотрудников (общий для менеджера и админа) -->
+    <div id="tabList" {% if user.role == 'manager' %}style="display:none;"{% endif %}>
         <div class="card">
             <div class="card-header"><h2>Сотрудники и их графики</h2><input type="text" placeholder="🔍 Поиск..." oninput="filterList(this.value)"></div>
-            <table class="employee-table" id="employeeList"><thead><tr><th>Сотрудник</th><th>Альянс</th><th>Группа</th><th>Всего смен</th><th>Ближайшие смены</th></tr></thead><tbody id="listBody"></tbody></table>
+            <table class="employee-table">
+                <thead><tr><th>Сотрудник</th><th>Альянс</th><th>Группа</th><th>Всего смен</th><th>Ближайшие смены</th></tr></thead>
+                <tbody id="listBody"></tbody>
+            </table>
         </div>
     </div>
 
-    <!-- ЗАЯВКИ -->
+    <!-- Заявки (только менеджер) -->
+    {% if user.role == 'manager' %}
     <div id="tabRequests" style="display:none;">
         <div class="card">
             <div class="card-header"><h2>Заявки сотрудников</h2><button class="btn btn-sm" onclick="loadRequests()">🔄 Обновить</button></div>
             <div style="overflow-x:auto;">
-                <table class="employee-table" id="requestsTable">
+                <table class="employee-table">
                     <thead><tr><th>Сотрудник</th><th>Альянс/Группа</th><th>Тип</th><th>Дата</th><th>Время</th><th>Действия</th></tr></thead>
                     <tbody id="requestsBody"></tbody>
                 </table>
             </div>
         </div>
     </div>
+    {% endif %}
 
+    <!-- Управление пользователями (только admin) -->
     {% if user.role == 'admin' %}
     <div id="tabUsers" style="display:none;">
         <div class="card">
             <div class="card-header"><h2>Все пользователи</h2><button class="btn btn-primary" onclick="openAddUserModal()">+ Добавить</button></div>
-            <table class="employee-table"><thead><tr><th>Логин</th><th>ФИО</th><th>Роль</th><th>Альянс</th><th>Группа</th><th>Действия</th></tr></thead><tbody id="usersBody"></tbody></table>
+            <table class="employee-table">
+                <thead><tr><th>Логин</th><th>ФИО</th><th>Роль</th><th>Альянс</th><th>Группа</th><th>Действия</th></tr></thead>
+                <tbody id="usersBody"></tbody>
+            </table>
         </div>
     </div>
     {% endif %}
@@ -227,7 +248,7 @@
 <!-- Модалка для назначения смены -->
 <div id="shiftModal" class="modal">
     <div class="modal-box">
-        <h3 id="shiftModalTitle">Назначить смену</h3>
+        <h3>Назначить смену</h3>
         <input type="hidden" id="shiftEmployeeId"><input type="hidden" id="shiftDate">
         <label>Сотрудник</label><input type="text" id="shiftEmployeeName" readonly disabled style="background:#f5f5f5;">
         <label>Дата</label><input type="text" id="shiftDateDisplay" readonly disabled>
@@ -246,7 +267,7 @@
     </div>
 </div>
 
-<!-- Модалка добавления пользователя -->
+<!-- Модалка добавления пользователя (admin) -->
 <div id="addUserModal" class="modal">
     <div class="modal-box">
         <h3>➕ Новый пользователь</h3>
@@ -266,6 +287,18 @@
     const dates = {{ dates | tojson }};
     const WEEKDAYS_SHORT = ['Вс','Пн','Вт','Ср','Чт','Пт','Сб'];
     let currentShiftData = null;
+    const userRole = "{{ user.role }}";
+
+    // Функция расчёта часов смены
+    function calcHours(start, end) {
+        if (!start || !end || start === 'Выходной') return 0;
+        const [sh, sm] = start.split(':').map(Number);
+        const [eh, em] = end.split(':').map(Number);
+        let startM = sh * 60 + sm;
+        let endM = eh * 60 + em;
+        if (endM <= startM) endM += 1440;
+        return (endM - startM) / 60;
+    }
 
     function buildTimeOptions() {
         let opts = [];
@@ -279,6 +312,8 @@
     }
 
     function openShiftModal(employeeId, employeeName, dateStr, existingShift) {
+        console.log("openShiftModal called", employeeId, employeeName, dateStr, existingShift);
+        if (!employeeId) return;
         currentShiftData = existingShift ? { id: existingShift.id, start: existingShift.start_time, end: existingShift.end_time } : null;
         document.getElementById('shiftEmployeeId').value = employeeId;
         document.getElementById('shiftEmployeeName').value = employeeName;
@@ -297,8 +332,13 @@
         } else {
             document.getElementById('shiftType').value = 'work';
             toggleShiftTime();
-            startSel.value = existingShift ? existingShift.start_time : '09:00';
-            endSel.value = existingShift ? (existingShift.end_time || '18:00') : '18:00';
+            if (existingShift) {
+                startSel.value = existingShift.start_time;
+                endSel.value = existingShift.end_time || '18:00';
+            } else {
+                startSel.value = '09:00';
+                endSel.value = '18:00';
+            }
         }
         document.getElementById('deleteShiftBtn').style.display = existingShift ? 'inline-block' : 'none';
         document.getElementById('shiftModalError').innerText = '';
@@ -306,6 +346,7 @@
     }
 
     function closeShiftModal() { document.getElementById('shiftModal').classList.remove('show'); }
+
     async function saveShift() {
         const empId = document.getElementById('shiftEmployeeId').value;
         const date = document.getElementById('shiftDate').value;
@@ -325,6 +366,7 @@
         if (!res.ok) { showShiftError(data.error); return; }
         closeShiftModal(); location.reload();
     }
+
     async function deleteCurrentShift() {
         if (!currentShiftData) return;
         if (!confirm('Удалить смену?')) return;
@@ -332,41 +374,76 @@
         if (res.ok) { closeShiftModal(); location.reload(); }
         else { const err = await res.json(); alert(err.error); }
     }
+
     function showShiftError(msg) { const e = document.getElementById('shiftModalError'); e.innerText = msg; setTimeout(() => e.innerText = '', 3000); }
 
-    // Матрица
+    // Матрица с двумя итоговыми колонками: кол-во смен и часы
     function buildMatrix(data) {
         const head = document.getElementById('matrixHead');
         const body = document.getElementById('matrixBody');
+        if (!head || !body) return;
+
         let headRow = '<tr><th class="name-col">Сотрудник</th>';
         dates.forEach(d => {
             const dt = new Date(d.value + 'T00:00:00');
             const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
             headRow += `<th${isWeekend ? ' style="color:#e74c3c;"' : ''}>${dt.getDate()}<br><span style="font-weight:normal;font-size:10px;">${WEEKDAYS_SHORT[dt.getDay()]}</span></th>`;
         });
-        headRow += '<th>Итого</th></table>';
+        headRow += '<th>Кол-во смен</th><th>Часы</th></tr>';
         head.innerHTML = headRow;
+
         body.innerHTML = '';
         data.forEach(emp => {
             const shiftsMap = {};
             (emp.shifts || []).forEach(s => { shiftsMap[s.shift_date] = s; });
-            let row = `<tr><td class="name-col" style="cursor:pointer;" title="Кликните чтобы добавить смену">${emp.full_name}<br><span style="font-weight:normal;color:#888;font-size:11px;">${emp.team || ''}</span></td>`;
-            let count = 0;
+            let row = `<tr><td class="name-col" style="cursor:pointer;" title="Кликните чтобы добавить смену">${escapeHtml(emp.full_name)}<br><span style="font-weight:normal;color:#888;font-size:11px;">${emp.team || ''}</span></td>`;
+            let shiftCount = 0;
+            let totalHours = 0;
+
             dates.forEach(d => {
                 const dt = new Date(d.value + 'T00:00:00');
                 const isWeekend = dt.getDay() === 0 || dt.getDay() === 6;
                 const shift = shiftsMap[d.value];
                 let content = '', cls = 'cell-empty';
                 if (shift) {
-                    if (shift.start_time === 'Выходной') { content = '—'; cls = 'cell-off'; }
-                    else { count++; content = shift.start_time + (shift.end_time ? '–' + shift.end_time : ''); cls = 'cell-work' + (isWeekend ? ' cell-weekend' : ''); }
-                } else { content = '·'; }
-                row += `<td class="${cls}" style="cursor:pointer;" onclick="openShiftModal(${emp.id}, '${emp.full_name.replace(/'/g, "\\'")}', '${d.value}', ${shift ? JSON.stringify(shift) : null})">${content}</td>`;
+                    if (shift.start_time === 'Выходной') {
+                        content = '—';
+                        cls = 'cell-off';
+                    } else {
+                        shiftCount++;
+                        const hours = calcHours(shift.start_time, shift.end_time);
+                        totalHours += hours;
+                        content = shift.start_time + (shift.end_time ? '–' + shift.end_time : '');
+                        cls = 'cell-work' + (isWeekend ? ' cell-weekend' : '');
+                    }
+                } else {
+                    content = '·';
+                }
+                // Передаём shift как объект или null
+                const shiftData = shift ? { id: shift.id, start_time: shift.start_time, end_time: shift.end_time } : null;
+                const shiftJson = shiftData ? JSON.stringify(shiftData).replace(/"/g, '&quot;') : 'null';
+                row += `<td class="${cls}" style="cursor:pointer;" onclick="openShiftModal(${emp.id}, '${escapeHtml(emp.full_name)}', '${d.value}', ${shiftJson})">${content}</td>`;
             });
-            row += `<td style="font-weight:bold;text-align:center;">${count}</td></tr>`;
+            row += `<td style="font-weight:bold;text-align:center;">${shiftCount}</td>`;
+            row += `<td style="font-weight:bold;text-align:center;">${totalHours.toFixed(1)}</td>`;
+            row += `</tr>`;
             body.innerHTML += row;
         });
     }
+
+    // Простая функция экранирования HTML
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        }).replace(/'/g, "\\'");
+    }
+
     function filterMatrix() {
         let filtered = employees;
         const alliance = document.getElementById('filterAlliance').value;
@@ -376,18 +453,18 @@
         buildMatrix(filtered);
     }
 
-    // Список сотрудников
+    // Список сотрудников (общий)
     function buildList(data) {
         const body = document.getElementById('listBody');
         body.innerHTML = '';
         data.forEach(emp => {
             const recent = (emp.shifts || []).filter(s => s.start_time !== 'Выходной').slice(0,3).map(s => s.shift_date).join(', ');
-            body.innerHTML += `<tr><td><b>${emp.full_name}</b></td><td>${emp.alliance || '—'}</td><td>${emp.team || '—'}</td><td><b>${emp.total_shifts}</b></td><td style="color:#666;">${recent || '—'}</td></tr>`;
+            body.innerHTML += `<tr><td><b>${escapeHtml(emp.full_name)}</b></td><td>${emp.alliance || '—'}</td><td>${emp.team || '—'}</td><td><b>${emp.total_shifts}</b></td><td style="color:#666;">${recent || '—'}</td></tr>`;
         });
     }
     function filterList(q) { buildList(employees.filter(e => e.full_name.toLowerCase().includes(q.toLowerCase()))); }
 
-    // Заявки
+    // Заявки (только менеджер)
     async function loadRequests() {
         const res = await fetch('/api/requests');
         const requests = await res.json();
@@ -396,7 +473,7 @@
         tbody.innerHTML = '';
         requests.forEach(req => {
             const timeInfo = req.request_type === 'add' ? (req.start_time === 'Выходной' ? 'Выходной' : `${req.start_time}–${req.end_time}`) : 'Удаление смены';
-            tbody.innerHTML += `<tr><td>${req.full_name}</td><td>${req.alliance || ''} / ${req.team || ''}</td><td>${req.request_type === 'add' ? '➕ Добавление' : '🗑️ Удаление'}</td><td>${req.shift_date}</td><td>${timeInfo}</td><td><button class="btn btn-success btn-sm" onclick="approveRequest(${req.id})">✅ Одобрить</button> <button class="btn btn-danger btn-sm" onclick="rejectRequest(${req.id})">❌ Отклонить</button></td></tr>`;
+            tbody.innerHTML += `<tr><td>${escapeHtml(req.full_name)}</td><td>${req.alliance || ''} / ${req.team || ''}</td><td>${req.request_type === 'add' ? '➕ Добавление' : '🗑️ Удаление'}</td><td>${req.shift_date}</td><td>${timeInfo}</td><td><button class="btn btn-success btn-sm" onclick="approveRequest(${req.id})">✅ Одобрить</button> <button class="btn btn-danger btn-sm" onclick="rejectRequest(${req.id})">❌ Отклонить</button></td></tr>`;
         });
     }
     async function approveRequest(id) {
@@ -421,7 +498,7 @@
         const roleLabels = { admin: '👑 Админ', manager: '👔 Менеджер', employee: '👤 Сотрудник' };
         body.innerHTML = '';
         users.forEach(u => {
-            body.innerHTML += `<tr><td><code>${u.username}</code></td><td>${u.full_name}</td><td>${roleLabels[u.role]}</td><td>${u.alliance || '—'}</td><td>${u.team || '—'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id}, '${u.full_name}')">🗑️</button></td></tr>`;
+            body.innerHTML += `<tr><td><code>${escapeHtml(u.username)}</code></td><td>${escapeHtml(u.full_name)}</td><td>${roleLabels[u.role]}</td><td>${u.alliance || '—'}</td><td>${u.team || '—'}</td><td><button class="btn btn-danger btn-sm" onclick="deleteUser(${u.id}, '${escapeHtml(u.full_name)}')">🗑️</button></td></tr>`;
         });
     }
     function openAddUserModal() { document.getElementById('addUserModal').classList.add('show'); document.getElementById('addUserError').innerText = ''; }
@@ -444,21 +521,32 @@
     }
     async function deleteUser(id, name) { if (confirm(`Удалить ${name}?`)) { await fetch(`/api/users/delete/${id}`, { method: 'POST' }); loadUsers(); } }
 
-    // Вкладки
+    // Переключение вкладок
     function switchTab(tab, btn) {
         document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
         btn.classList.add('active');
-        document.getElementById('tabMatrix').style.display = tab === 'matrix' ? 'block' : 'none';
-        document.getElementById('tabList').style.display = tab === 'list' ? 'block' : 'none';
-        document.getElementById('tabRequests').style.display = tab === 'requests' ? 'block' : 'none';
-        if (document.getElementById('tabUsers')) document.getElementById('tabUsers').style.display = tab === 'users' ? 'block' : 'none';
-        if (tab === 'requests') loadRequests();
-        if (tab === 'users') loadUsers();
+        if (userRole === 'manager') {
+            document.getElementById('tabMatrix').style.display = tab === 'matrix' ? 'block' : 'none';
+            document.getElementById('tabList').style.display = tab === 'list' ? 'block' : 'none';
+            document.getElementById('tabRequests').style.display = tab === 'requests' ? 'block' : 'none';
+            if (tab === 'requests') loadRequests();
+        } else if (userRole === 'admin') {
+            document.getElementById('tabList').style.display = tab === 'list' ? 'block' : 'none';
+            document.getElementById('tabUsers').style.display = tab === 'users' ? 'block' : 'none';
+            if (tab === 'users') loadUsers();
+        }
     }
 
+    // Инициализация
     document.addEventListener('DOMContentLoaded', () => {
-        buildMatrix(employees);
-        buildList(employees);
+        if (userRole === 'manager') {
+            buildMatrix(employees);
+            buildList(employees);
+            document.getElementById('filterAlliance')?.addEventListener('change', filterMatrix);
+            document.getElementById('filterTeam')?.addEventListener('change', filterMatrix);
+        } else if (userRole === 'admin') {
+            buildList(employees);
+        }
     });
 </script>
 </body>

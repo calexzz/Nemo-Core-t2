@@ -1,0 +1,10 @@
+username,password,full_name,role,alliance,team
+admin,admin123,Администратор,admin,,
+manager1,pass123,Пупкин Иван Иванович,manager,Пупкина,
+manager2,pass123,Тумбочкин Петр Петрович,manager,Тумбочкина,
+siz_alex,pass123,Сизый Александр Петрович,employee,Пупкина,Группа Сизых
+siz_mar,pass123,Сизый Мария Ивановна,employee,Пупкина,Группа Сизых
+vas_ivan,pass123,Васильков Иван Сергеевич,employee,Пупкина,Группа Василькова
+vas_olga,pass123,Василькова Ольга Васильевна,employee,Пупкина,Группа Василькова
+kuz_vikt,pass123,Кузнецов Виктор Михайлович,employee,Тумбочкина,Группа Кузнецовых
+kuz_svet,pass123,Кузнецова Светлана Викторовна,employee,Тумбочкина,Группа Кузнецовых
