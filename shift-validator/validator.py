@@ -162,3 +162,31 @@ def validate_consecutive_shifts(existing_dates: list, new_date: str, max_consecu
     """
     all_dates = list(existing_dates) + [new_date]
     return count_max_consecutive(all_dates) <= max_consecutive
+
+# ─── Валидация 24-часового опережения ────────────────────────────────────────
+
+def is_within_advance_hours(shift_date: str, start_time: str, min_advance_hours: int = MIN_ADVANCE_HOURS, now: datetime = None) -> bool:
+    """
+    Проверяет, что заявка подана не менее чем за min_advance_hours до смены.
+
+    Args:
+        shift_date:        Дата смены ("YYYY-MM-DD")
+        start_time:        Время начала смены ("HH:MM") или "Выходной"
+        min_advance_hours: Минимальный запас в часах (по умолчанию 24)
+        now:               Текущее время (если None — берётся datetime.now()).
+                           Полезно для тестирования.
+
+    Returns:
+        True если до начала смены >= min_advance_hours, False иначе
+    """
+    if now is None:
+        now = datetime.now()
+
+    time_str = "00:00" if start_time == "Выходной" else start_time
+
+    try:
+        shift_dt = datetime.strptime(f"{shift_date} {time_str}", "%Y-%m-%d %H:%M")
+        diff_hours = (shift_dt - now).total_seconds() / 3600
+        return diff_hours >= min_advance_hours
+    except (ValueError, TypeError):
+        return False
