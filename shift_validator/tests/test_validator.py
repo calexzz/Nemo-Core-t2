@@ -7,7 +7,7 @@
 
 import pytest
 from datetime import datetime, timedelta
-from shift_validator import (
+from shift_validator.validator import (
     validate_shift_time,
     get_shift_duration_hours,
     validate_consecutive_shifts,
