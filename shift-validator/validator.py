@@ -5,6 +5,8 @@ Functions in this module are pure (no DB access) so they
 can be reused in any context: web app, CLI, tests, etc.
 """
 
+from datetime import datetime
+
 # ─── Константы ────────────────────────────────────────────────────────────────
 
 MAX_SHIFT_HOURS = 12          # максимум часов в смене
@@ -96,3 +98,67 @@ def get_shift_duration_hours(start_time: str, end_time: str) -> float:
         return (eh * 60 + em - sh * 60 - sm) / 60
     except (ValueError, IndexError, AttributeError):
         return 0.0
+
+# ─── Валидация смен подряд ────────────────────────────────────────────────────
+
+def count_max_consecutive(shift_dates: list) -> int:
+    """
+    Считает максимальное количество рабочих смен подряд в списке дат.
+
+    Args:
+        shift_dates: Список дат в формате "YYYY-MM-DD"
+                     (могут повторяться, порядок не важен)
+
+    Returns:
+        Максимальная длина непрерывной серии смен подряд.
+        Возвращает 0 для пустого списка.
+
+    Examples:
+        >>> count_max_consecutive(["2024-01-01", "2024-01-02", "2024-01-03"])
+        3
+        >>> count_max_consecutive(["2024-01-01", "2024-01-03"])
+        1
+    """
+    if not shift_dates:
+        return 0
+
+    dates = sorted(set(shift_dates))
+    max_consecutive = 1
+    current = 1
+
+    for i in range(1, len(dates)):
+        d1 = datetime.strptime(dates[i - 1], "%Y-%m-%d")
+        d2 = datetime.strptime(dates[i], "%Y-%m-%d")
+
+        if (d2 - d1).days == 1:
+            current += 1
+            max_consecutive = max(max_consecutive, current)
+        else:
+            current = 1
+
+    return max_consecutive
+
+
+def validate_consecutive_shifts(existing_dates: list, new_date: str, max_consecutive: int = MAX_CONSECUTIVE_SHIFTS) -> bool:
+    """
+    Проверяет, что добавление новой смены не превысит лимит смен подряд.
+
+    Args:
+        existing_dates:  Список уже существующих дат смен ("YYYY-MM-DD")
+        new_date:        Дата новой смены ("YYYY-MM-DD")
+        max_consecutive: Максимально допустимое количество смен подряд
+                         (по умолчанию MAX_CONSECUTIVE_SHIFTS = 6)
+
+    Returns:
+        True если добавление допустимо, False если превысит лимит
+
+    Examples:
+        >>> dates = ["2024-01-01","2024-01-02","2024-01-03",
+        ...          "2024-01-04","2024-01-05","2024-01-06"]
+        >>> validate_consecutive_shifts(dates, "2024-01-07")
+        False
+        >>> validate_consecutive_shifts(dates, "2024-01-08")
+        True
+    """
+    all_dates = list(existing_dates) + [new_date]
+    return count_max_consecutive(all_dates) <= max_consecutive
