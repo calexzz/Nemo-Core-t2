@@ -1,16 +1,18 @@
-# shift_validator
+# shift-validator
 
-Библиотека валидации рабочих смен. Вынесена из проекта Nemo-Core-t2.
+Библиотека валидации рабочих смен. Вынесена из проекта [Nemo-Core-t2](https://github.com/calexzz/Nemo-Core-t2).
 
 Содержит чистые функции без доступа к БД.
 
 ## Установка
 
-pip install shift_validator
-
+```bash
+pip install shift-validator
+```
 
 ## Использование
 
+```python
 from shift_validator import (
     validate_shift_time,
     validate_consecutive_shifts,
@@ -34,24 +36,25 @@ validate_consecutive_shifts(existing, "2024-01-08")  # True
 
 # Проверить минимальное опережение заявки (24 часа)
 is_within_advance_hours("2024-06-15", "09:00")  # True/False
-
+```
 
 ## Константы
 
 | Константа | Значение | Описание |
 |---|---|---|
-| MAX_SHIFT_HOURS | 12 | Максимальная длительность смены |
-| MAX_CONSECUTIVE_SHIFTS | 6 | Максимум смен подряд |
-| SHIFT_HOUR_MIN | 8 | Начало рабочего окна |
-| SHIFT_HOUR_MAX | 20 | Конец рабочего окна |
-| MIN_ADVANCE_HOURS | 24 | Минимальное опережение заявки |
+| `MAX_SHIFT_HOURS` | 12 | Максимальная длительность смены |
+| `MAX_CONSECUTIVE_SHIFTS` | 6 | Максимум смен подряд |
+| `SHIFT_HOUR_MIN` | 8 | Начало рабочего окна |
+| `SHIFT_HOUR_MAX` | 20 | Конец рабочего окна |
+| `MIN_ADVANCE_HOURS` | 24 | Минимальное опережение заявки |
 
 ## Разработка
 
-cd shift_validator
+```bash
+cd shift-validator
 poetry install
 poetry run pytest tests/ -v
-
+```
 
 ## Лицензия
 
