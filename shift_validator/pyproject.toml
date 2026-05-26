@@ -1,5 +1,5 @@
 [project]
-name = "shift-validator"
+name = "shift_validator"
 version = "0.1.0"
 description = "Validation library for work shift scheduling"
 authors = [
@@ -7,9 +7,9 @@ authors = [
 ]
 license = "MIT"
 requires-python = "^3.10"
-dependencies = [
-]
 
+[tool.poetry]
+package-mode = false
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
